@@ -41,8 +41,7 @@
                 }
             }
 
-
-            document.write( "<h2>" + input + " has visited here " + n + " times.</h2><br />" );
+            document.write( "<h2>어서오세요, " + input + "님. 이번이 " + n + "번째 방문이시군요.</h2><br /><br />" );
             localStorage.setItem( userKey, users.join() );
             localStorage.setItem( countKey, count.join() );
         </script>
@@ -50,9 +49,8 @@
 
     <body>
         <input type="button" value="Clear" onclick="clearLocalStorage()" />
-        <script>
-
-        </script>
+        <h4>게임을 시작하려면 아래 버튼을 클릭해주세요.</h4> <br />
+        <input type="button" value="Start" onclick="startGame()" />
     </body>
 
 </html>
