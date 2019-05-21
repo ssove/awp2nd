@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>index</title>
+        <script>
+            function clearLocalStorage() {
+                if ( window.localStorage ) {
+                    localStorage.clear();
+                }
+            }
+
+            var userKey = "userName",
+                countKey = "count",
+                users = localStorage.getItem( userKey ),
+                count = localStorage.getItem( countKey ),
+                input = prompt( "Input your name:" ),
+                visited = false,
+                n = 1,
+                p;
+
+            if ( !users ) {
+                users = [input];
+                count = [1];
+            } else {
+                users = users.split( "," );
+                count = count.split( "," );
+
+                for ( var i = 0; i < users.length; ++i ) {
+                    if ( users[i] === input ) {
+                        count[i] = parseInt( count[i] ) + 1;
+                        n = count[i];
+                        visited = true;
+                        break;
+                    }
+                }
+
+                if ( !visited ) {
+                    users.push( input );
+                    count.push( 1 );
+                }
+            }
+
+
+            document.write( "<h2>" + input + " has visited here " + n + " times.</h2><br />" );
+            localStorage.setItem( userKey, users.join() );
+            localStorage.setItem( countKey, count.join() );
+        </script>
+    </head>
+
+    <body>
+        <input type="button" value="Clear" onclick="clearLocalStorage()" />
+        <script>
+
+        </script>
+    </body>
+
+</html>
