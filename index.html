@@ -4,53 +4,27 @@
     <head>
         <title>index</title>
         <script>
-            function clearLocalStorage() {
-                if ( window.localStorage ) {
-                    localStorage.clear();
-                }
-            }
+            function shuffle( array ) {
+                if ( array instanceof Array ) {
+                    var randomNum, temp;
 
-            var userKey = "userName",
-                countKey = "count",
-                users = localStorage.getItem( userKey ),
-                count = localStorage.getItem( countKey ),
-                input = prompt( "Input your name:" ),
-                visited = false,
-                n = 1,
-                p;
-
-            if ( !users ) {
-                users = [input];
-                count = [1];
-            } else {
-                users = users.split( "," );
-                count = count.split( "," );
-
-                for ( var i = 0; i < users.length; ++i ) {
-                    if ( users[i] === input ) {
-                        count[i] = parseInt( count[i] ) + 1;
-                        n = count[i];
-                        visited = true;
-                        break;
+                    for ( var i = array.length; i; --i ) {
+                        randomNum = Math.floor( Math.random() * i );
+                        temp = array[i - 1];
+                        array[i - 1] = array[randomNum];
+                        array[randomNum] = temp;
                     }
-                }
-
-                if ( !visited ) {
-                    users.push( input );
-                    count.push( 1 );
+                } else {
+                    alert( "shuffle(): parameter array isn't an Array object." );
                 }
             }
 
-            document.write( "<h2>어서오세요, " + input + "님. 이번이 " + n + "번째 방문이시군요.</h2><br /><br />" );
-            localStorage.setItem( userKey, users.join() );
-            localStorage.setItem( countKey, count.join() );
+            var input = prompt( "이름을 입력하세요:" );
         </script>
     </head>
 
     <body>
         <input type="button" value="Clear" onclick="clearLocalStorage()" />
-        <h4>게임을 시작하려면 아래 버튼을 클릭해주세요.</h4> <br />
-        <input type="button" value="Start" onclick="startGame()" />
     </body>
 
 </html>
