@@ -3,23 +3,20 @@
 
     <head>
         <title>index</title>
+        <script type="text/javascript" src="storage.js"></script>
         <script>
-            function shuffle( array ) {
-                if ( array instanceof Array ) {
-                    var randomNum, temp;
+            let input = prompt( "이름을 입력하세요:" ),
+                idx = getIndexOf( "userName", input ),
+                userName,
+                visitedCnt,
+                choice;
 
-                    for ( var i = array.length; i; --i ) {
-                        randomNum = Math.floor( Math.random() * i );
-                        temp = array[i - 1];
-                        array[i - 1] = array[randomNum];
-                        array[randomNum] = temp;
-                    }
-                } else {
-                    alert( "shuffle(): parameter array isn't an Array object." );
-                }
+            if ( idx === NO_KEY ) {
+                userName = [];
+            } else {
+                
             }
 
-            var input = prompt( "이름을 입력하세요:" );
         </script>
     </head>
 

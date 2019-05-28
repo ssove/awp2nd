@@ -1,3 +1,6 @@
+const NO_KEY = -2;
+const NO_VALUE = -1;
+
 function clearLocalStorage( window ) {
     if ( window.localStorage ) {
         localStorage.clear();
@@ -5,32 +8,32 @@ function clearLocalStorage( window ) {
 }
 
 function getIndexOf( key, value ) {
-    var values = localStorage.getItem( key );
+    let values = localStorage.getItem( key );
 
     if ( !values ) {
         console.log( "getIndexOf(): No key named \"" + key + "\"");
-        return -2;
+        return NO_KEY;
     } else {
         values = values.split( "," );
 
-        for ( var i = 0; i < values.length; ++i ) {
+        for ( let i = 0; i < values.length; ++i ) {
             if ( values[i] === value ) {
                 return i;
             }
         }
 
         console.log( "getIndexOf(): Invalid value \"" + value + "\"");
-        return -1;
+        return NO_VALUE;
     }
 }
 
 function getCount( userKey, userName ) {
-    var countKey = "count",
+    let countKey = "count",
         count = localStorage.getItem( countKey ),
         userNameIdx = getIndexOf( userKey, userName );
 
-    if ( userNameIdx === -1 || userNameIdx === -2 ) {
-        return;
+    if ( userNameIdx === NO_KEY || userNameIdx === NO_VALUE ) {
+        return -1;
     }
 
     count = count.split( "," );
@@ -38,25 +41,20 @@ function getCount( userKey, userName ) {
     return count[userNameIdx];
 }
 
-function setCount( userKey, userName, countKey, count ) {
-    var userNameIdx = getIndexOf( userKey, userName ),
-        users,
-        counts;
+function setCount( countKey, count, idx ) {
+    let counts = localStorage.getItem( countKey ).split( "," );
 
-    if ( userNameIdx === -2 ) {
-        users = [userName];
-        counts = [1];
-
-    } else if ( userNameIdx === -1 ) {
-        users = localStorage.getItem( userKey );
-        counts = localStorage.getItem( countKey );
-        users.push( userName );
-        counts.push( 1 );
+    if ( !counts ) {
+        console.log( "setCount(): No key named \"" + countKey + "\"" );
+        counts = [];
+    } else if ( !counts.length ) {
+        console.log( "setCount(): No value in \"" + countKey + "\"" );
+    } else if ( idx < 0 || idx >= counts.length ) {
+        console.log( "setCount(): Invalid index" );
     } else {
-        counts = localStorage.getItem( countKey );
-        counts[userNameIdx] = parseInt( count[userNameIdx] ) + count;
+        counts[idx] = count;
+        localStorage.setItem( counts.join() );
     }
 
-    localStorage.setItem( userKey, users.join() );
-    localStorage.setItem( countKey, counts.join() );
+    return;
 }
