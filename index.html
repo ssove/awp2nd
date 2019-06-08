@@ -25,8 +25,73 @@
             }
 
             function getRadioHTML(value) {
-                return "<input type='radio' name='game' value='" + value + "' />"
-                            + value;
+                return "<input type='radio' name='game' value='" + value +
+                    "' />" + parseGameTitle(value).join(" ");
+            }
+
+            function getChoiceHTML() {
+                return "<input type='button' id='choiceBtn' value='완료' onclick='showNextTurn()' />";
+            }
+
+            function getRoundHTML(game1, game2) {
+                document.getElementById("img1").innerHTML = getImgHTML(game1);
+                document.getElementById("img2").innerHTML = getImgHTML(game2);
+                document.getElementById("radio1").innerHTML = getRadioHTML(game1);
+                document.getElementById("radio2").innerHTML = getRadioHTML(game2);
+                document.getElementById("choiceBtn").innerHTML = getChoiceHTML();
+            }
+
+            function count(arr, val) {
+                let cnt = 0;
+
+                for (let i = 0; i < arr.length; ++i) {
+                    if (arr[i] === val) {
+                        ++cnt;
+                    }
+                }
+
+                return cnt;
+            }
+
+            function showNextTurn() {
+                let loser, games, loserIdx,
+                    cand1, cand2,
+                    cand1Idx, cand2Idx,
+                    html = "";
+
+
+                games = document.getElementsByName("game");
+                if (!games[0].checked && !games[1].checked) {
+                    loserIdx = -1;
+                } else {
+                    loser = games[0].checked ? games[1].value : games[0].value;
+                    loserIdx = imgs.indexOf(loser);
+                }
+
+                if (loserIdx !== -1) {
+                    win[loserIdx] = false;
+                } else {
+                    alert("둘 중 한 게임을 선택 후 버튼을 클릭하세요.");
+                    return;
+                }
+
+                if (count(win, true) === 1) {
+                    console.log("hi");
+                    html += "<h2>" + input + "님의 " + visited + "번째 선택은 " +
+                    parseGameTitle(imgs[win.indexOf(true)]).join(" ") + "였습니다.</h2>"
+                    document.getElementById("body").innerHTML = html;
+
+                    return;
+                }
+                
+                cand1Idx = findNextGame(win, turn);
+                cand1 = imgs[cand1Idx];
+                cand2Idx = findNextGame(win, cand1Idx + 1);
+                cand2 = imgs[cand2Idx];
+                turn = cand2Idx + 1;
+
+                getRoundHTML(cand1, cand2);
+                console.log(count(win, true));
             }
 
             function parseGameTitle(img) {
@@ -64,12 +129,11 @@
             }
 
             let imgs = ["img/Minecraft.jpeg", "img/Ori_and_the_blind_forest.jpg", "img/Overwatch.png", "img/Rainbow_Six_Siege.jpeg",
-            "img/Rimworld.jpeg", "img/Starcraft.jpg", "img/Stardew_Valley.png", "img/To_The_Moon.jpeg"
+                    "img/Rimworld.jpeg", "img/Starcraft.jpg", "img/Stardew_Valley.png", "img/To_The_Moon.jpeg"
                 ],
                 win = [true, true, true, true, true, true, true, true],
                 input = prompt("이름을 입력하세요"),
-                idx, userNames, counts, visited,
-                html;
+                idx, userNames, counts, visited, turn = 0;
 
             userNames = localStorage.getItem("userName");
             counts = localStorage.getItem("count");
@@ -95,11 +159,12 @@
             localStorage.setItem("userName", userNames.join(","));
             localStorage.setItem("count", counts.join(","));
             shuffle(imgs);
+            console.log(imgs);
             document.write("<h3>안녕하세요 " + input + "님, " + visited + "번째 방문을 환영합니다.</h3>");
         </script>
     </head>
 
-    <body>
+    <body id="body">
         <input type="button" value="Clear" onclick="clearLocalStorage()" />
         <div style="align: center;">
             <span id="img1"></span>
@@ -109,42 +174,12 @@
         <div style="align: center;">
             <span id="radio1"></span>
             <span id="radio2"></span>
+            <span id="choiceBtn"></span>
         </div>
 
-
         <script>
-            let i = 0,
-                cand1, cand2;
-            //while (true) {
-                cand1 = {};
-                cand2 = {};
-                html = "";
-
-                if (win.indexOf(true) === win.lastIndexOf(true)) {
-                    let img = imgs[win.indexOf(true)],
-                        game = parseGameName(img);
-
-                    html += "<h3>" + input + "님의 " + visited + "번째 선택은 ";
-                    for (let i = 0; i < game.length; ++i) {
-                        html += game[i] + " ";
-                    }
-                    html += "였습니다.</h3>";
-                    document.getElementByTagName("body").innerHTML = html;
-                    //break;
-                }
-                i = findNextGame(win, i);
-                cand1["img"] = imgs[i];
-                cand1["title"] = parseGameTitle(cand1["img"]).join(" ");
-                i = findNextGame(win, i + 1);
-                cand2["img"] = imgs[i];
-                cand2["title"] = parseGameTitle(cand2["img"]).join(" ");
-                console.log();
-
-                document.getElementById("img1").innerHTML = getImgHTML(cand1["img"]);
-                document.getElementById("img2").innerHTML = getImgHTML(cand2["img"]);
-                document.getElementById("radio1").innerHTML = getRadioHTML(cand1["title"]);
-                document.getElementById("radio2").innerHTML = getRadioHTML(cand2["title"]);
-            //}
+            getRoundHTML(imgs[0], imgs[1]);
+            turn = 2;
         </script>
     </body>
 
