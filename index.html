@@ -3,9 +3,62 @@
 
     <head>
         <title>Game worldcup</title>
-        <script type="text/javascript" src="storage.js"></script>
         <script>
-            
+            function shuffle(cards) {
+                var j, x, i;
+                for (i = cards.length; i; i -= 1) {
+                    j = Math.floor(Math.random() * i);
+                    x = cards[i - 1];
+                    cards[i - 1] = cards[j];
+                    cards[j] = x;
+                }
+            }
+
+            function clearLocalStorage() {
+                localStorage.clear();
+            }
+
+            let imgs = ["img/minecraft.jpeg", "img/ori.jpg", "img/overwatch.png", "img/r6s.jpeg", "img/rimworld.jpeg",
+                    "img/starcraft.jpg", "img/sv.png", "img/tothemoon.jpeg"
+                ],
+                win = [true, true, true, true, true, true, true, true],
+                input = prompt("이름을 입력하세요"),
+                idx, userNames, counts, visited,
+                cand1, cand2, html;
+
+            userNames = localStorage.getItem("userName");
+            counts = localStorage.getItem("count");
+
+            if (!userNames) {
+                userNames = [];
+                counts = [];
+            } else {
+                userNames = userNames.split(",");
+                counts = counts.split(",");
+            }
+
+            idx = userNames.indexOf(input);
+            if (idx === -1) {
+                userNames.push(input);
+                visited = 1;
+                counts.push(visited);
+            } else {
+                counts[idx] = parseInt(counts[idx]) + 1;
+                visited = counts[idx];
+            }
+
+            localStorage.setItem("userName", userNames.join(","));
+            localStorage.setItem("count", counts.join(","));
+            shuffle(imgs);
+            document.write("<h3>안녕하세요 " + input + "님, " + visited + "번째 방문을 환영합니다.</h3>");
+
+            while (true) {
+                html = "";
+
+                if (win.indexOf(true) === win.lastIndexOf(true)) {
+                    html += "<h3>" + input + "님의 " + visited + "번째 선택은 ""</h3>"
+                }
+            }
         </script>
     </head>
 
