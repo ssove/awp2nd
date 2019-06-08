@@ -5,7 +5,8 @@
         <title>Game worldcup</title>
         <script>
             function shuffle(cards) {
-                var j, x, i;
+                let j, x, i;
+
                 for (i = cards.length; i; i -= 1) {
                     j = Math.floor(Math.random() * i);
                     x = cards[i - 1];
@@ -18,13 +19,56 @@
                 localStorage.clear();
             }
 
-            let imgs = ["img/minecraft.jpeg", "img/ori.jpg", "img/overwatch.png", "img/r6s.jpeg", "img/rimworld.jpeg",
-                    "img/starcraft.jpg", "img/sv.png", "img/tothemoon.jpeg"
+            function getImgHTML(img) {
+                return "<img src=" + img + " />";
+            }
+
+            function getRadioHTML(value) {
+                return "<input type='radio' name='game' value='" + value + "' />"
+                            + value;
+            }
+
+            function parseGameTitle(img) {
+                /*
+                 * Parse "folder/game-title.extension" format to [game, title].
+                 * @Return [game, title].
+                 */
+
+                let game;
+
+                game = img.split("/");
+                game = game[1].split(".");
+                game = game[0].split("_");
+
+                return game;
+            }
+
+            function findNextGame(wins, start) {
+                /*
+                 * Find an index of the next candidate.
+                 * @Return the index.
+                 */
+
+                let i = start;
+
+                while (true) {
+                    if (i >= wins.length) {
+                        i = 0;
+                    } else if (win[i] === true) {
+                        return i;
+                    } else {
+                        i++;
+                    }
+                }
+            }
+
+            let imgs = ["img/Minecraft.jpeg", "img/Ori_and_the_blind_forest.jpg", "img/Overwatch.png", "img/Rainbow_Six_Siege.jpeg",
+            "img/Rimworld.jpeg", "img/Starcraft.jpg", "img/Stardew_Valley.png", "img/To_The_Moon.jpeg"
                 ],
                 win = [true, true, true, true, true, true, true, true],
                 input = prompt("이름을 입력하세요"),
                 idx, userNames, counts, visited,
-                cand1, cand2, html;
+                html;
 
             userNames = localStorage.getItem("userName");
             counts = localStorage.getItem("count");
@@ -51,19 +95,56 @@
             localStorage.setItem("count", counts.join(","));
             shuffle(imgs);
             document.write("<h3>안녕하세요 " + input + "님, " + visited + "번째 방문을 환영합니다.</h3>");
-
-            while (true) {
-                html = "";
-
-                if (win.indexOf(true) === win.lastIndexOf(true)) {
-                    html += "<h3>" + input + "님의 " + visited + "번째 선택은 ""</h3>"
-                }
-            }
         </script>
     </head>
 
     <body>
         <input type="button" value="Clear" onclick="clearLocalStorage()" />
+        <div style="align: center;">
+            <span id="img1"></span>
+            <span id="img2"></span>
+        </div>
+        <br />
+        <div style="align: center;">
+            <span id="radio1"></span>
+            <span id="radio2"></span>
+        </div>
+
+
+        <script>
+            let i = 0,
+                cand1, cand2;
+            //while (true) {
+                cand1 = {};
+                cand2 = {};
+                html = "";
+
+                if (win.indexOf(true) === win.lastIndexOf(true)) {
+                    let img = imgs[win.indexOf(true)],
+                        game = parseGameName(img);
+
+                    html += "<h3>" + input + "님의 " + visited + "번째 선택은 ";
+                    for (let i = 0; i < game.length; ++i) {
+                        html += game[i] + " ";
+                    }
+                    html += "였습니다.</h3>";
+                    document.getElementByTagName("body").innerHTML = html;
+                    //break;
+                }
+                i = findNextGame(win, i);
+                cand1["img"] = imgs[i];
+                cand1["title"] = parseGameTitle(cand1["img"]).join(" ");
+                i = findNextGame(win, i + 1);
+                cand2["img"] = imgs[i];
+                cand2["title"] = parseGameTitle(cand2["img"]).join(" ");
+                console.log();
+
+                document.getElementById("img1").innerHTML = getImgHTML(cand1["img"]);
+                document.getElementById("img2").innerHTML = getImgHTML(cand2["img"]);
+                document.getElementById("radio1").innerHTML = getRadioHTML(cand1["title"]);
+                document.getElementById("radio2").innerHTML = getRadioHTML(cand2["title"]);
+            //}
+        </script>
     </body>
 
 </html>
