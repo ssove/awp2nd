@@ -55,11 +55,11 @@
 
             function showNextTurn() {
                 let loser, games, loserIdx,
-                    cand1, cand2,
-                    cand1Idx, cand2Idx,
+                    participant1, participant2,
+                    participant1Idx, participant2Idx,
                     html = "";
 
-
+                // Find a loser.
                 games = document.getElementsByName("game");
                 if (!games[0].checked && !games[1].checked) {
                     loserIdx = -1;
@@ -69,29 +69,31 @@
                 }
 
                 if (loserIdx !== -1) {
+                    // loser can't show up any more.
                     win[loserIdx] = false;
                 } else {
                     alert("둘 중 한 게임을 선택 후 버튼을 클릭하세요.");
                     return;
                 }
 
+                // When the final winner is determined
                 if (count(win, true) === 1) {
-                    console.log("hi");
                     html += "<h2>" + input + "님의 " + visited + "번째 선택은 " +
                     parseGameTitle(imgs[win.indexOf(true)]).join(" ") + "였습니다.</h2>"
                     document.getElementById("body").innerHTML = html;
 
                     return;
                 }
-                
-                cand1Idx = findNextGame(win, turn);
-                cand1 = imgs[cand1Idx];
-                cand2Idx = findNextGame(win, cand1Idx + 1);
-                cand2 = imgs[cand2Idx];
-                turn = cand2Idx + 1;
 
-                getRoundHTML(cand1, cand2);
-                console.log(count(win, true));
+                // Determine the participants of the next round.
+                participant1Idx = findNextGame(win, turn);
+                participant1 = imgs[participant1Idx];
+                participant2Idx = findNextGame(win, participant1Idx + 1);
+                participant2 = imgs[participant2Idx];
+                turn = participant2Idx + 1;
+
+                // Update the round.
+                getRoundHTML(participant1, participant2);
             }
 
             function parseGameTitle(img) {
@@ -111,7 +113,7 @@
 
             function findNextGame(wins, start) {
                 /*
-                 * Find an index of the next candidate.
+                 * Find an index of the next participant.
                  * @Return the index.
                  */
 
@@ -135,6 +137,7 @@
                 input = prompt("이름을 입력하세요"),
                 idx, userNames, counts, visited, turn = 0;
 
+            // Start getting and configuring the user's information.
             userNames = localStorage.getItem("userName");
             counts = localStorage.getItem("count");
 
@@ -158,14 +161,15 @@
 
             localStorage.setItem("userName", userNames.join(","));
             localStorage.setItem("count", counts.join(","));
+            // Finish getting and configuring.
+
             shuffle(imgs);
-            console.log(imgs);
             document.write("<h3>안녕하세요 " + input + "님, " + visited + "번째 방문을 환영합니다.</h3>");
         </script>
     </head>
 
     <body id="body">
-        <input type="button" value="Clear" onclick="clearLocalStorage()" />
+        <input type="button" value="Clear localStorage" onclick="clearLocalStorage()" />
         <div style="align: center;">
             <span id="img1"></span>
             <span id="img2"></span>
