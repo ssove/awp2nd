@@ -30,7 +30,7 @@
             }
 
             function getChoiceHTML() {
-                return "<input type='button' id='choiceBtn' value='완료' onclick='showNextTurn()' />";
+                return "<input type='button' id='choiceBtn' value='Choice' onclick='showNextTurn()' />";
             }
 
             function getRoundHTML(game1, game2) {
@@ -72,14 +72,14 @@
                     // loser can't show up any more.
                     win[loserIdx] = false;
                 } else {
-                    alert("둘 중 한 게임을 선택 후 버튼을 클릭하세요.");
+                    alert("Please click one at least.");
                     return;
                 }
 
                 // When the final winner is determined
                 if (count(win, true) === 1) {
-                    html += "<h2>" + input + "님의 " + visited + "번째 선택은 " +
-                    parseGameTitle(imgs[win.indexOf(true)]).join(" ") + "였습니다.</h2>"
+                    html += "<h2>" + input + "\'s " + visited + "(st/nd/rd/th) choice is " +
+                    parseGameTitle(imgs[win.indexOf(true)]).join(" ") + ".</h2>"
                     document.getElementById("body").innerHTML = html;
 
                     return;
@@ -134,7 +134,7 @@
                     "img/Rimworld.jpeg", "img/Starcraft.jpg", "img/Stardew_Valley.png", "img/To_The_Moon.jpeg"
                 ],
                 win = [true, true, true, true, true, true, true, true],
-                input = prompt("이름을 입력하세요"),
+                input = prompt("Input your name."),
                 idx, userNames, counts, visited, turn = 0;
 
             // Start getting and configuring the user's information.
@@ -164,7 +164,7 @@
             // Finish getting and configuring.
 
             shuffle(imgs);
-            document.write("<h3>안녕하세요 " + input + "님, " + visited + "번째 방문을 환영합니다.</h3>");
+            document.write("<h3>Hello " + input + ", welcome your " + visited + "(st/nd/rd/th) visit.</h3>");
         </script>
     </head>
 
